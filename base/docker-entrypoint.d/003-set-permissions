@@ -1,8 +1,7 @@
 #!/bin/sh
 
+# Change /app folder permissions if U_ID and/or G_ID has been changed
 if [ "$U_ID" != $(stat -c '%u' /app) ] || [ "$G_ID" != $(stat -c '%g' /app) ]; then
-    echo "Changing /app folder permissions."
-
-    chown $U_ID:$G_ID /app
-    chown -R $U_ID:$G_ID $(ls -A /app | grep -Ev 'node_modules|.git')
+    echo "Changing /app folder permissions. May take a while..."
+    chown -R $U_ID:$G_ID /app
 fi

@@ -56,7 +56,11 @@ ENV U_ID=1000 \
 WORKDIR /app
 
 RUN apk --no-cache add --upgrade -t build-deps git \
- && apk --no-cache add --upgrade ca-certificates
+ && apk --no-cache add --upgrade ca-certificates \
+ && chown ${U_ID}:${G_ID} /app
+
+# Temporarly change to user account
+USER ${U_ID}:${G_ID}
 
 RUN git clone ${APP_URL} . \
  && git checkout ${GIT_BRANCH} \
@@ -68,6 +72,8 @@ RUN git clone ${APP_URL} . \
  && rm -rf /app/.gitignore \
  && rm -rf /app/.travis.yml/ \
  && rm -rf /app/docs/
+
+USER 0
 
 RUN apk --purge del build-deps git \
  && rm -rf /var/cache/apk/*
