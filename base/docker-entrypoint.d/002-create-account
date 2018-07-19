@@ -1,0 +1,19 @@
+#!/bin/sh
+
+U_NAME=${U_NAME:-app}
+G_NAME=${G_NAME:-${U_NAME}}
+
+U_EXIST=$(getent passwd "$U_ID" | cut -f 1 -d ":")
+G_EXIST=$(getent passwd "$G_ID" | cut -f 1 -d ":")
+
+if [ -z "$G_EXIST" ]; then
+    addgroup -g $G_ID -S $G_NAME
+else
+    G_NAME=$G_EXIST
+fi
+
+if [ -z "$U_EXIST" ]; then
+    adduser -u $U_ID -G $G_NAME -D $U_NAME
+else
+    addgroup $U_EXIST $G_NAME
+fi

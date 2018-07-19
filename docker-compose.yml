@@ -1,0 +1,46 @@
+version: '3.4'
+
+services:
+  matrix-dimension:
+    image: kapdap/matrix-dimension:${GIT_COMMIT:-latest}
+
+    build:
+      context: .
+      args:
+        BUILD_DATE: ${BUILD_DATE}
+        BUILD_VERSION: ${BUILD_VERSION}
+        GIT_BRANCH: ${GIT_BRANCH}
+        GIT_COMMIT: ${GIT_COMMIT}
+
+    environment:
+      HOST_ADDRESS: ${HOST_ADDRESS}
+      HOST_PORT: ${HOST_PORT}
+
+      HOME_NAME: ${HOME_NAME}
+      HOME_MATRIX_URL: ${HOME_MATRIX_URL}
+      HOME_FEDERATION_URL: ${HOME_FEDERATION_URL}
+      HOME_MEDIA_URL: ${HOME_MEDIA_URL}
+      HOME_ACCESS_TOKEN: ${HOME_ACCESS_TOKEN}
+
+      ADMIN_LIST: ${ADMIN_LIST}
+
+      WIDGET_BLACKLIST: ${WIDGET_BLACKLIST}
+
+      DATABASE_FILE: ${DATABASE_FILE}
+
+      LOG_CONSOLE: ${LOG_CONSOLE}
+      LOG_CONSOLE_LEVEL: ${LOG_CONSOLE_LEVEL}
+      LOG_FILE_PATH: ${LOG_FILE_PATH}
+      LOG_FILE_LEVEL: ${LOG_FILE_LEVEL}
+      LOG_FILE_SIZE: ${LOG_FILE_SIZE}
+      LOG_FILE_COUNT: ${LOG_FILE_COUNT}
+
+      GENERATE_CONFIG: ${GENERATE_CONFIG}
+
+      U_ID: ${U_ID}
+      G_ID: ${G_ID}
+
+    #volumes:
+      # Configuration volume. config.yaml will be generated from env vars if one doesn't exist
+      # config.yaml will be overwritten every on start. Set GENERATE_CONFIG=false to prevent this
+      #- ${VOL_CONFIG:-./config}:/app/config

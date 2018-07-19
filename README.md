@@ -1,2 +1,3 @@
-# docker-matrix-dimension
-Docker image for Dimension
+# Dimension Docker Image
+
+Docker image for Dimension.

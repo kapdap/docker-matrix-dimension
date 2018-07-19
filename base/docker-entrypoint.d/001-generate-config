@@ -1,0 +1,64 @@
+#!/bin/sh
+
+TEMPLT="/config.yaml.tpl"
+CONFIG="/app/config/$NODE_ENV.yaml"
+
+if [ ! -f "$CONFIG" ]; then
+    GENERATE_CONFIG="true"
+fi
+
+GENERATE_CONFIG=`echo "$GENERATE_CONFIG" | tr '[:upper:]' '[:lower:]'`
+if [ -z "$GENERATE_CONFIG" ] || [ "$GENERATE_CONFIG" == "false" ]; then
+    exit 0
+fi
+
+if [ -f "$TEMPLT" ]; then
+    cp $TEMPLT $CONFIG
+else
+    echo "Cannot generate $CONFIG! Missing config template $TEMPLT!"
+
+    if [ -f "$CONFIG" ]; then
+        echo "Falling back to existing config at $CONFIG"
+        exit 0
+    else
+        echo "Service cannot be started"
+        exit 1
+    fi
+fi
+
+echo "Generating config $CONFIG"
+
+sed -i "s|HOST_ADDRESS|$HOST_ADDRESS|g" $CONFIG
+sed -i "s|HOST_PORT|$HOST_PORT|g" $CONFIG
+sed -i "s|HOME_NAME|$HOME_NAME|g" $CONFIG
+sed -i "s|HOME_MATRIX_URL|$HOME_MATRIX_URL|g" $CONFIG
+sed -i "s|HOME_FEDERATION_URL|$HOME_FEDERATION_URL|g" $CONFIG
+sed -i "s|HOME_MEDIA_URL|$HOME_MEDIA_URL|g" $CONFIG
+
+# Read access token from file if an existing path is provided. Supports use of docker secrets.
+if [ -f "$HOME_ACCESS_TOKEN_FILE" ]; then
+    sed -i "s|HOME_ACCESS_TOKEN|`cat $HOME_ACCESS_TOKEN_FILE`|g" $CONFIG
+else
+    sed -i "s|HOME_ACCESS_TOKEN|$HOME_ACCESS_TOKEN|g" $CONFIG
+    unset HOME_ACCESS_TOKEN
+fi
+
+sed -i "s|DATABASE_FILE|$DATABASE_FILE|g" $CONFIG
+
+sed -i "s|LOG_CONSOLE|$LOG_CONSOLE|g" $CONFIG
+sed -i "s|LOG_LEVEL|$LOG_CONSOLE_LEVEL|g" $CONFIG
+sed -i "s|LOG_PATH|$LOG_FILE_PATH|g" $CONFIG
+sed -i "s|LOG_FILE_LEVEL|$LOG_FILE_LEVEL|g" $CONFIG
+sed -i "s|LOG_SIZE|$LOG_FILE_SIZE|g" $CONFIG
+sed -i "s|LOG_COUNT|$LOG_FILE_COUNT|g" $CONFIG
+
+if [ ! -z "${ADMIN_LIST}" ]; then
+    ADMIN_LIST="\n    - '${ADMIN_LIST//,/'\n    - '}'"
+fi
+
+if [ ! -z "${WIDGET_BLACKLIST}" ]; then
+    WIDGET_BLACKLIST="\n    - '${WIDGET_BLACKLIST//,/'\n    - '}'"
+fi
+
+sed -i "s|ADMIN_LIST|$ADMIN_LIST|g" $CONFIG
+sed -i "s|WIDGET_BLACKLIST|$WIDGET_BLACKLIST|g" $CONFIG
