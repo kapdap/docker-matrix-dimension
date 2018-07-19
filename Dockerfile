@@ -32,7 +32,7 @@ ARG GOSU_DOWNLOAD_KEY="0x036A9C25BF357DD4"
 RUN buildDeps='curl gnupg' HOME='/root' \
 	&& apk --no-cache add --upgrade $buildDeps \
 	&& gpg-agent --daemon \
-	&& gpg --keyserver pool.sks-keyservers.net --recv-keys $GOSU_DOWNLOAD_KEY \
+	&& gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys $GOSU_DOWNLOAD_KEY \
 	&& echo "trusted-key $GOSU_DOWNLOAD_KEY" >> /root/.gnupg/gpg.conf \
 	&& curl -sSL "$GOSU_DOWNLOAD_URL" > gosu-$GOSU_ARCHITECTURE \
 	&& curl -sSL "$GOSU_DOWNLOAD_SIG" > gosu-$GOSU_ARCHITECTURE.asc \
