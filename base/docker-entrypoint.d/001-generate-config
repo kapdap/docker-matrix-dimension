@@ -28,6 +28,18 @@ fi
 
 echo "Generating config $CONFIG"
 
+HOST_ADDRESS=${HOST_ADDRESS:-"0.0.0.0"}
+HOST_PORT=${HOST_PORT:-8184}
+HOME_NAME=${HOME_NAME:-"t2bot.io"}
+HOME_MATRIX_URL=${HOME_MATRIX_URL:-"https://t2bot.io"}
+DATABASE_FILE=${DATABASE_FILE:-"dimension.db"}
+LOG_CONSOLE=`echo "${LOG_CONSOLE:-"true"}" | tr '[:upper:]' '[:lower:]'`
+LOG_CONSOLE_LEVEL=${LOG_CONSOLE_LEVEL:-"info"}
+LOG_FILE_PATH=${LOG_FILE_PATH:-"logs/dimension.log"}
+LOG_FILE_LEVEL=${LOG_FILE_LEVEL:-"verbose"}
+LOG_FILE_SIZE=${LOG_FILE_SIZE:-52428800}
+LOG_FILE_COUNT=${LOG_FILE_COUNT:-5}
+
 sed -i "s|HOST_ADDRESS|$HOST_ADDRESS|g" $CONFIG
 sed -i "s|HOST_PORT|$HOST_PORT|g" $CONFIG
 sed -i "s|HOME_NAME|$HOME_NAME|g" $CONFIG
