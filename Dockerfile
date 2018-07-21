@@ -48,10 +48,6 @@ RUN git clone ${APP_URL} . \
  && npm install \
  && NODE_ENV=production npm run-script build:web \
  && NODE_ENV=production npm run-script build:app \
- && rm -rf /app/.git/ \
- && rm -rf /app/.gitignore \
- && rm -rf /app/.travis.yml/ \
- && rm -rf /app/docs/
 
 USER 0
 
