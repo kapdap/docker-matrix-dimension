@@ -59,7 +59,7 @@ else
         echo "HOME_ACCESS_TOKEN_FILE and HOME_ACCESS_TOKEN are unset. A random access token will be generated and saved to /app/config/secret."
         echo -e "Provide a docker volume to persist this token across restarts. Tokens are printed to the console each time they are generated.\n"
 
-        HOME_ACCESS_TOKEN=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c32 | base64)"`
+        HOME_ACCESS_TOKEN=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c32 | base64`
 
         echo $HOME_ACCESS_TOKEN | tee $SECRET && echo
 
