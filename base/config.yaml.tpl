@@ -33,8 +33,9 @@ goneb:
 logging:
   console: LOG_CONSOLE
   consoleLevel: LOG_LEVEL
+  writeFiles: LOG_FILE
   file: LOG_PATH
-  fileLevel: LOG_FILE_LEVEL
+  fileLevel: FILE_LEVEL
   rotate:
     size: LOG_SIZE
     count: LOG_COUNT

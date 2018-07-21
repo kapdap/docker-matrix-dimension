@@ -35,6 +35,7 @@ HOME_MATRIX_URL=${HOME_MATRIX_URL:-"https://t2bot.io"}
 DATABASE_FILE=${DATABASE_FILE:-"dimension.db"}
 LOG_CONSOLE=`echo "${LOG_CONSOLE:-"true"}" | tr '[:upper:]' '[:lower:]'`
 LOG_CONSOLE_LEVEL=${LOG_CONSOLE_LEVEL:-"info"}
+LOG_FILE=`echo "${LOG_FILE:-"true"}" | tr '[:upper:]' '[:lower:]'`
 LOG_FILE_PATH=${LOG_FILE_PATH:-"logs/dimension.log"}
 LOG_FILE_LEVEL=${LOG_FILE_LEVEL:-"verbose"}
 LOG_FILE_SIZE=${LOG_FILE_SIZE:-52428800}
@@ -59,8 +60,9 @@ sed -i "s|DATABASE_FILE|$DATABASE_FILE|g" $CONFIG
 
 sed -i "s|LOG_CONSOLE|$LOG_CONSOLE|g" $CONFIG
 sed -i "s|LOG_LEVEL|$LOG_CONSOLE_LEVEL|g" $CONFIG
+sed -i "s|LOG_FILE|$LOG_FILE|g" $CONFIG
 sed -i "s|LOG_PATH|$LOG_FILE_PATH|g" $CONFIG
-sed -i "s|LOG_FILE_LEVEL|$LOG_FILE_LEVEL|g" $CONFIG
+sed -i "s|FILE_LEVEL|$LOG_FILE_LEVEL|g" $CONFIG
 sed -i "s|LOG_SIZE|$LOG_FILE_SIZE|g" $CONFIG
 sed -i "s|LOG_COUNT|$LOG_FILE_COUNT|g" $CONFIG
 
