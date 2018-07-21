@@ -1,4 +1,4 @@
-FROM node:8-alpine
+FROM kapdap/alpine-gosu AS gosu
 LABEL maintainer "kapdap.nz@gmail.com"
 
 ARG BUILD_DATE
@@ -16,38 +16,14 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.version=$BUILD_VERSION \
       org.label-schema.docker.cmd="docker run -d kapdap/matrix-dimension"
 
-# Install gosu (ToDo: Move to seperate image)
-#   https://github.com/mendsley/docker-alpine-gosu
-
-# 036A9C25BF357DD4 - Tianon Gravi <tianon@tianon.xyz>
-#   http://pgp.mit.edu/pks/lookup?op=vindex&search=0x036A9C25BF357DD4
-ARG GOSU_VERSION="1.10"
-ARG GOSU_ARCHITECTURE="amd64"
-ARG GOSU_DOWNLOAD_URL="https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$GOSU_ARCHITECTURE"
-ARG GOSU_DOWNLOAD_SIG="https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$GOSU_ARCHITECTURE.asc"
-ARG GOSU_DOWNLOAD_KEY="0x036A9C25BF357DD4"
-
-# Download and install gosu
-#   https://github.com/tianon/gosu/releases
-RUN buildDeps='curl gnupg' HOME='/root' \
-	&& apk --no-cache add --upgrade $buildDeps \
-	&& gpg-agent --daemon \
-	&& gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys $GOSU_DOWNLOAD_KEY \
-	&& echo "trusted-key $GOSU_DOWNLOAD_KEY" >> /root/.gnupg/gpg.conf \
-	&& curl -sSL "$GOSU_DOWNLOAD_URL" > gosu-$GOSU_ARCHITECTURE \
-	&& curl -sSL "$GOSU_DOWNLOAD_SIG" > gosu-$GOSU_ARCHITECTURE.asc \
-	&& gpg --verify gosu-$GOSU_ARCHITECTURE.asc \
-	&& rm -f gosu-$GOSU_ARCHITECTURE.asc \
-	&& mv gosu-$GOSU_ARCHITECTURE /usr/bin/gosu \
-	&& chmod +x /usr/bin/gosu \
-    && apk del --purge $buildDeps \
-	&& rm -rf /root/.gnupg
-
 # Download application and supporting packages
 #    https://github.com/turt2live/matrix-dimension
-ARG APP_URL=https://github.com/turt2live/matrix-dimension.git
-ARG GIT_BRANCH=master
-ARG GIT_COMMIT
+FROM node:8-alpine
+
+COPY --from=gosu /usr/bin/gosu /usr/bin/gosu
+
+RUN apk --no-cache add -t build-deps git \
+ && apk --no-cache add ca-certificates
 
 ENV U_ID=1000 \
     G_ID=1000 \
@@ -61,6 +37,10 @@ RUN apk --no-cache add --upgrade -t build-deps git \
 
 # Temporarly change to user account
 USER ${U_ID}:${G_ID}
+
+ARG APP_URL=https://github.com/turt2live/matrix-dimension.git
+ARG GIT_BRANCH=master
+ARG GIT_COMMIT
 
 RUN git clone ${APP_URL} . \
  && git checkout ${GIT_BRANCH} \
