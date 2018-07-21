@@ -52,7 +52,7 @@ sed -i "s|HOME_MEDIA_URL|$HOME_MEDIA_URL|g" $CONFIG
 # Read access token from file if an existing path is provided. Supports use of docker secrets.
 if [ -f "$HOME_ACCESS_TOKEN_FILE" ]; then
     sed -i "s|HOME_ACCESS_TOKEN|`cat $HOME_ACCESS_TOKEN_FILE`|g" $CONFIG
-elif [ -f "$SECRET" ]; then
+elif [ -f "$SECRET" ] && [ -z "$HOME_ACCESS_TOKEN" ]; then
     sed -i "s|HOME_ACCESS_TOKEN|`cat $SECRET`|g" $CONFIG
 else
     if [ -z "$HOME_ACCESS_TOKEN" ]; then
