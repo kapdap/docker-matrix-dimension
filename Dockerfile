@@ -26,16 +26,12 @@ RUN apk --no-cache add -t build-deps git \
  && apk --no-cache add ca-certificates
 
 ENV U_ID=1000 \
-    G_ID=1000 \
-    HOST_PORT=8184
+    G_ID=1000
 
 WORKDIR /app
 
-RUN apk --no-cache add --upgrade -t build-deps git \
- && apk --no-cache add --upgrade ca-certificates \
- && chown ${U_ID}:${G_ID} /app
+RUN chown ${U_ID}:${G_ID} /app
 
-# Temporarly change to user account
 USER ${U_ID}:${G_ID}
 
 ARG APP_URL=https://github.com/turt2live/matrix-dimension.git
@@ -45,19 +41,17 @@ ARG GIT_COMMIT
 RUN git clone ${APP_URL} . \
  && git checkout ${GIT_BRANCH} \
  && git reset --hard ${GIT_COMMIT} \
- && npm install \
- && NODE_ENV=production npm run-script build:web \
- && NODE_ENV=production npm run-script build:app \
+ && NODE_ENV=development npm install \
+ && npm run-script build:web \
+ && npm run-script build:app
 
 USER 0
 
-RUN apk --purge del build-deps git \
+RUN apk --purge del build-deps \
  && rm -rf /var/cache/apk/*
 
-# Copy image base files to /
 COPY base/ /
 
-# Ensure entrypoint executable bits are set
 RUN chmod +x /docker-entrypoint.sh \
  && chmod +x /docker-entrypoint.d/*
 
@@ -65,11 +59,12 @@ RUN chmod +x /docker-entrypoint.sh \
 ONBUILD COPY docker-entrypoint.d/ /docker-entrypoint.d/
 ONBUILD RUN  chmod +x /docker-entrypoint.d/*
 
-ENV NODE_ENV=production
-
-VOLUME [ "/app/config/" ]
+ENV HOST_PORT=8184 \
+    NODE_ENV=production
 
 EXPOSE $HOST_PORT
+
+VOLUME [ "/app/config/" ]
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
