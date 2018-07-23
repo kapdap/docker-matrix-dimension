@@ -32,7 +32,7 @@ echo "Generating config $CONFIG"
 HOST_ADDRESS=${HOST_ADDRESS:-"0.0.0.0"}
 HOST_PORT=${HOST_PORT:-8184}
 HOME_NAME=${HOME_NAME:-"t2bot.io"}
-HOME_MATRIX_URL=${HOME_MATRIX_URL:-"https://t2bot.io"}
+HOME_MATRIX_URL=${HOME_MATRIX_URL:-"https://${HOME_NAME}"}
 DATABASE_FILE=${DATABASE_FILE:-"dimension.db"}
 LOG_CONSOLE=`echo "${LOG_CONSOLE:-"true"}" | tr '[:upper:]' '[:lower:]'`
 LOG_CONSOLE_LEVEL=${LOG_CONSOLE_LEVEL:-"info"}
