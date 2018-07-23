@@ -43,5 +43,5 @@ services:
 
     #volumes:
       # Configuration volume. config.yaml will be generated from env vars if one doesn't exist
-      # config.yaml will be overwritten every on start. Set GENERATE_CONFIG=false to prevent this
+      # Set GENERATE_CONFIG=true to update config.yaml on every start up.
       #- ${VOL_CONFIG:-./config}:/app/config
